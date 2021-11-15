@@ -1,0 +1,18 @@
+---
+# handlers file for windows_exporter
+- name: Copy config.yml
+  win_copy:
+    src: files/config.yml
+    dest: C:\Program Files (x86)\windows_exporter\
+
+- name: Update registry ImagePath
+  win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Services\windows_exporter
+    name: ImagePath
+    data: '"c:\Program Files (x86)\windows_exporter\windows_exporter.exe" --log.format logger:eventlog?name=windows_exporter  --config.file="C:\Program Files (x86)\windows_exporter\config.yml"' 
+    type: expandstring
+
+- name: Restart windows_exporter service
+  win_service:
+    name: windows_exporter
+    state: restarted

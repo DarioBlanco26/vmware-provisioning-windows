@@ -1,0 +1,47 @@
+---
+- name: Gathers facts for the machines
+  setup:
+
+- name: Copy Puppet Agent installer
+  win_copy:
+    src: files/puppet-agent-5.5.12-x64.msi
+    dest: C:\Libreria\
+
+- name: Install Puppet Agent
+  win_package:
+    path: C:\Libreria\puppet-agent-5.5.12-x64.msi
+    state: present
+    arguments: PUPPET_MASTER_SERVER={{puppet_master}} PUPPET_CA_SERVER={{puppet_master}} PUPPET_AGENT_CERTNAME={{ansible_fqdn | lower}} PUPPET_AGENT_ENVIRONMENT={{puppet_env}}
+  ignore_errors: yes
+
+- name: Checking Puppet Service
+  win_service:
+    name: puppet
+    state: started
+  ignore_errors: yes
+  
+- name: Apply puppet agent
+  win_shell: puppet agent -t
+  register: result
+  changed_when:
+    - result.rc == 1
+    - result.stderr == ''
+  failed_when:
+    - result.rc == 1
+    - result.stderr != ''
+  until: result.failed == false
+  retries: 3
+  delay: 5
+  ignore_errors: yes
+
+- name: Assign puppetclient to hostgroup
+  delegate_to: '{{ puppet_master }}'
+  shell: hammer host update --name "{{ ansible_fqdn | lower }}" --hostgroup "{{ puppet_env_hostgroup }}"
+  become: true
+  become_user: root
+  register: issue_host
+  until: issue_host.failed == false
+  retries: 3
+  delay: 5
+  ignore_errors: yes
+

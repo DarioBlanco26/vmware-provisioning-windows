@@ -1,0 +1,6 @@
+---
+# defaults file for windows_exporter
+windows_exporter_amd64_exe : false
+windows_exporter_i386_exe : false
+
+ 

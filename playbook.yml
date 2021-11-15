@@ -1,0 +1,14 @@
+---
+- name: Provisioning VM
+  hosts: all #vmware
+  gather_facts: no
+  vars:
+    - vcenter_hostname: 'vcenter_fqdn' 
+  vars_prompt:
+    - name: vm_template
+      prompt: "Vmware windows server template name"
+      private: no
+  roles:
+    - roles/vmware_provisioning_domain
+    - roles/windows_exporter
+    - roles/puppet_agent

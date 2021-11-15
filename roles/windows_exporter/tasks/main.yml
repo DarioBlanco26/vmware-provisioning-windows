@@ -1,0 +1,36 @@
+---
+## tasks file for windows_exporter
+- name: Create directory Libreria
+  win_file:
+    path: C:\Libreria
+    state: directory
+
+- name: Copy windows_exporter
+  win_copy:
+    src: files/windows_exporter-0.16.0-386.msi
+    dest: C:\Libreria\
+
+- name: Verify winexporter install
+  win_stat:
+    path: C:\Program Files (x86)\windows_exporter\windows_exporter.exe
+  register: winexporter_install
+
+- name: Stop windows_exporter service
+  win_service:
+    name: windows_exporter
+    state: stopped
+  when: winexporter_install.stat.exists == true
+
+- name: Install or Update windows_exporter
+  win_package:
+    path: C:\Libreria\windows_exporter-0.16.0-386.msi
+    state: present
+  notify:
+    - Copy config.yml
+    - Update registry ImagePath
+    - Restart windows_exporter service
+
+- name: Start windows_exporter service
+  win_service:
+    name: windows_exporter
+    state: started

@@ -1,0 +1,20 @@
+[vm_win]
+#pw-hostname-01 ansible_host=ip.x.x.x
+#pw-hostname-02 ansible_host=ip.x.x.x 
+
+[vm_win:vars]
+env=produccion
+puppet_env=production
+puppet_env_hostgroup=ws_prod_basic
+vmware_env=PROD
+vmware_win_os=WIN
+vmware_host_env=pw-
+vmware_win_folder=Windows/Produccion/
+ansible_user='{{username}}'
+ansible_password='{{password}}'
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
+ansible_winrm_transport=ntlm
+vmware_template='{{vm_template}}'
+vmware_nw_name='vmware_network_name'
+vmware_nw_gateway='ip.x.x.x'

@@ -1,0 +1,18 @@
+---
+# defaults file for role_vmware_provisioning
+# Template
+vmware_win_template: '{{vmware_template}}'
+vmware_win_resource_pool: RESOURCE_POOL
+vmware_datacenter: DATACENTER
+vmware_cluster: CLUSTER
+
+# Hardware
+vmware_hw_memory_mb: 4096
+vmware_hw_num_cpus: 4
+vmware_hw_num_cpu_cores_per_socket: 2
+vmware_hw_hotadd_cpu: True
+vmware_hw_hotadd_memory: True
+
+# Network
+vmware_nw_netmask: 255.255.255.0
+vmware_nw_domain: windows.com.py
